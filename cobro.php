@@ -1,7 +1,7 @@
 <?php
 
 // Token de acceso (JWT) obtenido en el proceso de autenticación
-$token = "TOKEM";
+$token = "TOKEN";
 
 // API Key proporcionada por Nequi para identificar la aplicación
 $api_key = "API_KEY";
