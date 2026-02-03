@@ -8,14 +8,14 @@ class ClienteNequi {
     protected $urlBase;
 
     public function __construct() {
-        // Usamos getenv con un fallback vacío para evitar errores de concatenación
-        $this->authBasico = getenv('NEQUI_AUTH_BASICA') ?: '';
-        $this->apiKey = getenv('NEQUI_API_KEY') ?: '';
-        $this->urlBase = getenv('URL_API_NEQUI') ?: '';
+        // Leemos primero desde $_ENV (phpdotenv), con fallback a getenv
+        $this->authBasico = $_ENV['NEQUI_AUTH_BASICA'] ?? getenv('NEQUI_AUTH_BASICA') ?: '';
+        $this->apiKey = $_ENV['NEQUI_API_KEY'] ?? getenv('NEQUI_API_KEY') ?: '';
+        $this->urlBase = $_ENV['URL_API_NEQUI'] ?? getenv('URL_API_NEQUI') ?: '';
     }
 
     protected function obtenerTokenAcceso() {
-        $urlAuth = getenv('URL_AUTH_NEQUI');
+        $urlAuth = $_ENV['URL_AUTH_NEQUI'] ?? getenv('URL_AUTH_NEQUI');
         $ch = curl_init($urlAuth . "?grant_type=client_credentials");
         
         curl_setopt($ch, CURLOPT_POST, true);
