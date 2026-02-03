@@ -55,8 +55,13 @@ class ClienteNequi {
         ]);
 
         $respuesta = curl_exec($ch);
-        curl_close($ch);
 
+        // AGREGAR ESTO PARA DEPURAR:
+        if ($respuesta === false) {
+            var_dump(curl_error($ch)); 
+        }
+
+        curl_close($ch);
         return json_decode($respuesta, true);
     }
 
