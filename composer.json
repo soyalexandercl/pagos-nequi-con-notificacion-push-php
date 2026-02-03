@@ -1,0 +1,9 @@
+{
+    "name": "nequi/pagos-nequi-con-notificacion-push-php",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {}
+}
