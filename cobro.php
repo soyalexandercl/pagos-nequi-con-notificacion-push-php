@@ -14,7 +14,7 @@ $id_mensaje = uniqid();
 
 // Datos del cliente y valor a pagar
 $telefono = "NUMERO_CLIENTE";
-$valor = 10000;
+$valor = "VALOR_COBRO";
 
 // Construir la estructura completa del cuerpo de la petición (Payload)
 $estructura = [
