@@ -8,21 +8,16 @@ class ClienteNequi {
     protected $urlBase;
 
     public function __construct() {
-        // En una implementación real, usar una librería como phpdotenv
-        $this->authBasico = getenv('NEQUI_AUTH_BASICA');
-        $this->apiKey = getenv('NEQUI_API_KEY');
-        $this->urlBase = getenv('URL_API_NEQUI');
+        // Usamos getenv con un fallback vacío para evitar errores de concatenación
+        $this->authBasico = getenv('NEQUI_AUTH_BASICA') ?: '';
+        $this->apiKey = getenv('NEQUI_API_KEY') ?: '';
+        $this->urlBase = getenv('URL_API_NEQUI') ?: '';
     }
 
-    /**
-     * Obtiene el token JWT mediante Basic Auth
-     *
-     */
     protected function obtenerTokenAcceso() {
-        $url = getenv('URL_AUTH_NEQUI') . "?grant_type=client_credentials";
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
+        $urlAuth = getenv('URL_AUTH_NEQUI');
+        $ch = curl_init($urlAuth . "?grant_type=client_credentials");
+        
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -36,12 +31,15 @@ class ClienteNequi {
         return $respuesta['access_token'] ?? null;
     }
 
-    /**
-     * Ejecuta peticiones POST estandarizadas hacia Nequi
-     */
     protected function ejecutarPeticion($endpoint, $payload) {
         $token = $this->obtenerTokenAcceso();
-        $urlCompleta = $this->urlBase . $endpoint;
+        
+        // Verificación de URL para evitar el error "Could not resolve host"
+        if (empty($this->urlBase)) {
+            return ["error" => "La URL base de la API no está definida en el .env"];
+        }
+
+        $urlCompleta = $this->urlBase . ltrim($endpoint, '/');
 
         $ch = curl_init($urlCompleta);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -55,10 +53,11 @@ class ClienteNequi {
         ]);
 
         $respuesta = curl_exec($ch);
-
-        // AGREGAR ESTO PARA DEPURAR:
+        
         if ($respuesta === false) {
-            var_dump(curl_error($ch)); 
+            $error = curl_error($ch);
+            curl_close($ch);
+            return ["error_curl" => $error];
         }
 
         curl_close($ch);

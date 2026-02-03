@@ -6,10 +6,6 @@ use App\Configuracion\ClienteNequi;
 
 class ServicioPago extends ClienteNequi {
 
-    /**
-     * Inicia una solicitud de pago (Push Notification)
-     *
-     */
     public function solicitarPagoPush($telefono, $monto, $referencia = "") {
         $cuerpo = [
             "RequestMessage" => [
@@ -30,10 +26,6 @@ class ServicioPago extends ClienteNequi {
         return $this->ejecutarPeticion("-services-paymentservice-unregisteredpayment", $cuerpo);
     }
 
-    /**
-     * Consulta el estado de un pago mediante su ID de transacción
-     *
-     */
     public function consultarEstadoPago($idTransaccion) {
         $cuerpo = [
             "RequestMessage" => [
