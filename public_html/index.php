@@ -1,24 +1,19 @@
 <?php
 
-// Ruta corregida para salir de public_html y buscar vendor
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// Carga estricta del .env
-try {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-    $dotenv->load();
-} catch (\Exception $e) {
-    die("Error crítico: No se pudo cargar el archivo .env. Asegúrate de que exista en la raíz.");
-}
+$env = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$env->load();
 
-use App\Servicios\ServicioPago;
+use App\Servicios\ServicioNequi;
 
-$servicio = new ServicioPago();
+$servicio = new ServicioNequi();
 
-echo "<h1>Prueba Integración Nequi</h1>";
+$telefono = "NUMERO_CLIENTE";
+$valor = "VALOR";
+$referencia = "REFERENCIA_PAGO";
 
-// Ejecución con var_dump para ver la respuesta real
-$respuesta = $servicio->solicitarPagoPush("3235230270", 1000, "Cubitx");
+$respuesta = $servicio->registrarPago($telefono, $valor, $referencia);
 
 echo "<pre>";
 var_dump($respuesta);
