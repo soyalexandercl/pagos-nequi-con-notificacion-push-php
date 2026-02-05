@@ -4,11 +4,7 @@ Este proyecto proporciona una implementación base en PHP para integrar cobros m
 
 ## Descripción General
 
-El sistema utiliza el flujo de pagos no registrados (**Unregistered Payment**) de Nequi. El comercio inicia la solicitud, lo que dispara una notificación push en la aplicación móvil del usuario para que este autorice el movimiento con su clave o biometría.
-
-## Propósito del Sistema
-
-Facilitar una estructura técnica profesional y organizada para desarrolladores que necesiten implementar la API de Nequi en aplicaciones basadas en PHP.
+El sistema utiliza el flujo de pagos no registrados (**Unregistered Payment**) de Nequi. El comercio inicia la solicitud, lo que dispara una notificación push en la aplicación móvil del usuario para que este autorice el movimiento.
 
 ## Alcance del Flujo
 
@@ -21,7 +17,7 @@ Facilitar una estructura técnica profesional y organizada para desarrolladores 
 
 - **PHP**: Versión 7.4 o superior (compatible con PHP 8.x).
 - **Composer**: Para la gestión de dependencias.
-- **Credenciales de Nequi**: Debes contactar a Conecta Nequi para obtener las llaves de acceso (API Key y Auth Básica).
+- **Credenciales de Nequi**: Debes contactar a Conecta Nequi para obtener las llaves de acceso.
 
 ## Tecnologías Utilizadas
 
@@ -33,7 +29,7 @@ Facilitar una estructura técnica profesional y organizada para desarrolladores 
 ### Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/pagos-nequi-push-php.git
+git clone https://github.com/soyalexandercl/pagos-nequi-push-php.git
 cd pagos-nequi-push-php
 ```
 
@@ -45,15 +41,15 @@ composer install
 
 ### Configurar el entorno
 
-Crea un archivo `.env` en la raíz del proyecto (el sistema ya incluye un `.gitignore` para protegerlo).
+Crea un archivo `.env` en la raíz del proyecto
 
 ## Configuración (Variables de Entorno)
 
-Define las siguientes variables en tu archivo `.env` para que la clase `ClienteNequi` pueda cargarlas:
+Define las siguientes variables en el archivo `.env` para que la clase `ClienteNequi` pueda cargarlas:
 
 ```env
-NEQUI_AUTH_BASICA=Tu_Token_Basico
-NEQUI_API_KEY=Tu_Api_Key
+NEQUI_AUTH_BASICA=Token
+NEQUI_API_KEY=Api_Key
 URL_AUTH_NEQUI=https://api.nequi.com/auth/token
 URL_API_NEQUI=https://api.nequi.com/
 NEQUI_NIT_NEGOCIO=Nit_De_Tu_Comercio
@@ -82,37 +78,7 @@ Para un control correcto de la transacción, es obligatorio gestionar los siguie
 - **Revertir Pago**:  
   Si necesitas devolver el dinero, usa el `phoneNumber`, el monto y el `MessageID` original de la transacción.
 
-## Ejemplo de Uso (index.php)
-
-```php
-require_once __DIR__ . '/../vendor/autoload.php';
-
-use App\Servicios\ServicioNequi;
-
-$servicio = new ServicioNequi();
-
-// Datos del cliente y pago
-$telefono = "3001234567";
-$valor = "5000";
-$referencia = "ORDEN-101";
-
-// Iniciar el cobro (Push Notification)
-$respuesta = $servicio->registrarPago($telefono, $valor, $referencia);
-
-echo "<pre>";
-print_r($respuesta);
-echo "</pre>";
-```
-
-## Respuestas Simuladas
-
-- **Éxito (Pendiente de aprobación)**: Devuelve un `code: "0"` y el `transactionId`.
-- **Error**: Devuelve códigos específicos de Nequi si el número no existe o el monto es inválido.
-
 ## Pruebas y Buenas Prácticas
 
 - **Pruebas Manuales**: Utiliza el archivo `index.php` para enviar notificaciones push a números de prueba autorizados en el sandbox de Nequi.
 - **Idempotencia**: El sistema usa `uniqid()` para generar el `MessageID`, pero se debe utilizar otro método que garantice que no se repita en ningún momento.
-- **Seguridad**: Nunca expongas las variables del archivo `.env` en archivos públicos.
-
----
