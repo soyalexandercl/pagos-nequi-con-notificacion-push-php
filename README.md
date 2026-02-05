@@ -116,5 +116,3 @@ echo "</pre>";
 - **Seguridad**: Nunca expongas las variables del archivo `.env` en archivos públicos.
 
 ---
-
-Este archivo está pensado para ser usado como `README` del proyecto.
