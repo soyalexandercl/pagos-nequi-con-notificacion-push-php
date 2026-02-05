@@ -78,7 +78,7 @@ Para un control correcto de la transacción, es obligatorio gestionar los siguie
 - **Revertir Pago**:  
   Si necesitas devolver el dinero, usa el `phoneNumber`, el monto y el `MessageID` original de la transacción.
 
-## Pruebas y Buenas Prácticas
+## Pruebas
 
 - **Pruebas Manuales**: Utiliza el archivo `index.php` para enviar notificaciones push a números de prueba autorizados en el sandbox de Nequi.
 - **Idempotencia**: El sistema usa `uniqid()` para generar el `MessageID`, pero se debe utilizar otro método que garantice que no se repita en ningún momento.
