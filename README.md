@@ -1,78 +1,90 @@
-Pagos Nequi con Notificación Push (PHP)
-Este proyecto proporciona una implementación base en PHP para integrar cobros mediante Notificaciones Push de Nequi. Permite a los comercios solicitar pagos directamente al celular del cliente, consultar el estado de la transacción, cancelarla o revertirla si es necesario.
+# Pagos Nequi con Notificación Push (PHP)
 
-Descripción General
-El sistema utiliza el flujo de pagos no registrados (Unregistered Payment) de Nequi. El comercio inicia la solicitud, lo que dispara una notificación push en la aplicación móvil del usuario para que este autorice el movimiento con su clave o biometría.
+Este proyecto proporciona una implementación base en PHP para integrar cobros mediante **Notificaciones Push de Nequi**. Permite a los comercios solicitar pagos directamente al celular del cliente, consultar el estado de la transacción, cancelarla o revertirla si es necesario.
 
-Propósito del Sistema
+## Descripción General
+
+El sistema utiliza el flujo de pagos no registrados (**Unregistered Payment**) de Nequi. El comercio inicia la solicitud, lo que dispara una notificación push en la aplicación móvil del usuario para que este autorice el movimiento con su clave o biometría.
+
+## Propósito del Sistema
+
 Facilitar una estructura técnica profesional y organizada para desarrolladores que necesiten implementar la API de Nequi en aplicaciones basadas en PHP.
 
-Alcance del Flujo
-Autenticación: Generación automática de tokens OAuth2.
+## Alcance del Flujo
 
-Registro de Pago: Envío de solicitud de cobro al cliente.
+- **Autenticación**: Generación automática de tokens OAuth2.
+- **Registro de Pago**: Envío de solicitud de cobro al cliente.
+- **Seguimiento**: Consulta de estados en tiempo real.
+- **Gestión de Excepciones**: Funcionalidades para cancelar solicitudes pendientes o revertir transacciones completadas.
 
-Seguimiento: Consulta de estados en tiempo real.
+## Requisitos Previos
 
-Gestión de Excepciones: Funcionalidades para cancelar solicitudes pendientes o revertir transacciones completadas.
+- **PHP**: Versión 7.4 o superior (compatible con PHP 8.x).
+- **Composer**: Para la gestión de dependencias.
+- **Credenciales de Nequi**: Debes contactar a Conecta Nequi para obtener las llaves de acceso (API Key y Auth Básica).
 
-Requisitos Previos
-PHP: Versión 7.4 o superior (Compatible con PHP 8.x).
+## Tecnologías Utilizadas
 
-Composer: Para la gestión de dependencias.
+- **vlucas/phpdotenv**: Para la carga segura de variables de entorno.
+- **cURL**: Para la ejecución de peticiones HTTP a los servicios de Nequi.
 
-Credenciales de Nequi: Debes contactar a Conecta Nequi para obtener las llaves de acceso (API Key y Auth Básica).
+## Instalación
 
-Tecnologías Utilizadas
-vlucas/phpdotenv: Para la carga segura de variables de entorno.
+### Clonar el repositorio
 
-cURL: Para la ejecución de peticiones HTTP a los servicios de Nequi.
-
-Instalación
-Clonar el repositorio:
-
-Bash
+```bash
 git clone https://github.com/tu-usuario/pagos-nequi-push-php.git
 cd pagos-nequi-push-php
-Instalar dependencias:
+```
 
-Bash
+### Instalar dependencias
+
+```bash
 composer install
-Configurar el entorno:
-Crea un archivo .env en la raíz del proyecto (el sistema ya incluye un .gitignore para protegerlo).
+```
 
-Configuración (Variables de Entorno)
-Define las siguientes variables en tu archivo .env para que la clase ClienteNequi pueda cargarlas:
+### Configurar el entorno
 
-Fragmento de código
+Crea un archivo `.env` en la raíz del proyecto (el sistema ya incluye un `.gitignore` para protegerlo).
+
+## Configuración (Variables de Entorno)
+
+Define las siguientes variables en tu archivo `.env` para que la clase `ClienteNequi` pueda cargarlas:
+
+```env
 NEQUI_AUTH_BASICA=Tu_Token_Basico
 NEQUI_API_KEY=Tu_Api_Key
 URL_AUTH_NEQUI=https://api.nequi.com/auth/token
 URL_API_NEQUI=https://api.nequi.com/
 NEQUI_NIT_NEGOCIO=Nit_De_Tu_Comercio
+```
 
-Estructura del Proyecto
-src/Configuracion/ClienteNequi.php: Gestiona la autenticación, generación de encabezados y ejecución de peticiones cURL.
+## Estructura del Proyecto
 
-src/Servicios/ServicioNequi.php: Contiene la lógica de negocio para registrar, consultar, cancelar y revertir pagos.
+- `src/Configuracion/ClienteNequi.php`: Gestiona la autenticación, generación de encabezados y ejecución de peticiones cURL.
+- `src/Servicios/ServicioNequi.php`: Contiene la lógica de negocio para registrar, consultar, cancelar y revertir pagos.
+- `public_html/index.php`: Ejemplo práctico de implementación del flujo.
+- `.env`: Archivo de configuración de credenciales (debe crearse manualmente).
 
-public_html/index.php: Ejemplo práctico de implementación del flujo.
+## Flujo de Pagos Detallado
 
-.env: Archivo de configuración de credenciales (debe crearse manualmente).
-
-Flujo de Pagos Detallado
 Para un control correcto de la transacción, es obligatorio gestionar los siguientes identificadores:
 
-Registrar Pago: Al ejecutar registrarPago(), se genera un MessageID único en el encabezado y Nequi devuelve un transactionId. Debes guardar ambos en tu base de datos.
+- **Registrar Pago**:  
+  Al ejecutar `registrarPago()`, se genera un `MessageID` único en el encabezado y Nequi devuelve un `transactionId`. Debes guardar ambos en tu base de datos.
 
-Consultar Estado: Utiliza el transactionId para verificar si el usuario aprobó el pago.
+- **Consultar Estado**:  
+  Utiliza el `transactionId` para verificar si el usuario aprobó el pago.
 
-Cancelar Pago: Si el usuario no responde, usa el phoneNumber y el transactionId para anular la solicitud.
+- **Cancelar Pago**:  
+  Si el usuario no responde, usa el `phoneNumber` y el `transactionId` para anular la solicitud.
 
-Revertir Pago: Si necesitas devolver el dinero, usa el phoneNumber, el monto y el MessageID original de la transacción.
+- **Revertir Pago**:  
+  Si necesitas devolver el dinero, usa el `phoneNumber`, el monto y el `MessageID` original de la transacción.
 
-Ejemplo de Uso (index.php)
-PHP
+## Ejemplo de Uso (index.php)
+
+```php
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Servicios\ServicioNequi;
@@ -90,14 +102,19 @@ $respuesta = $servicio->registrarPago($telefono, $valor, $referencia);
 echo "<pre>";
 print_r($respuesta);
 echo "</pre>";
-Respuestas Simuladas
-Éxito (Pendiente de aprobación): Devuelve un code: "0" y el transactionId.
+```
 
-Error: Devuelve códigos específicos de Nequi si el número no existe o el monto es inválido.
+## Respuestas Simuladas
 
-Pruebas y Buenas Prácticas
-Pruebas Manuales: Utiliza el archivo index.php para enviar notificaciones push a números de prueba autorizados en el sandbox de Nequi.
+- **Éxito (Pendiente de aprobación)**: Devuelve un `code: "0"` y el `transactionId`.
+- **Error**: Devuelve códigos específicos de Nequi si el número no existe o el monto es inválido.
 
-Idempotencia: El sistema usa uniqid() para generar el MessageID Pero se debe utilizar otro método para garantizar que no se repita en ningún momento.
+## Pruebas y Buenas Prácticas
 
-Seguridad: Nunca expongas las variables del archivo .env en archivos públicos.
+- **Pruebas Manuales**: Utiliza el archivo `index.php` para enviar notificaciones push a números de prueba autorizados en el sandbox de Nequi.
+- **Idempotencia**: El sistema usa `uniqid()` para generar el `MessageID`, pero se debe utilizar otro método que garantice que no se repita en ningún momento.
+- **Seguridad**: Nunca expongas las variables del archivo `.env` en archivos públicos.
+
+---
+
+Este archivo está pensado para ser usado como `README` del proyecto.
