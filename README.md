@@ -29,7 +29,7 @@ El sistema utiliza el flujo de pagos no registrados (**Unregistered Payment**) d
 ### Clonar el repositorio
 
 ```bash
-git clone https://github.com/soyalexandercl/pagos-nequi-push-php.git
+git clone https://github.com/soyalexandercl/pagos-nequi-con-notificacion-push-php.git
 cd pagos-nequi-push-php
 ```
 
